@@ -23,17 +23,23 @@ chmod 400 /root/.vnc/passwd
 # Unset password variable for security
 unset VNC_PASSWORD
 
+# Set VNC port from environment variable or default to 5900
+VNC_PORT=${VNC_PORT:-5900}
+
 # Start TurboVNC server with specified geometry and port
 # TurboVNC forks itself, so no need for backgrounding here
 # Exit if vncserver fails to start
-/opt/TurboVNC/bin/vncserver -rfbauth /root/.vnc/passwd -geometry 1200x800 -rfbport 5900 -wm openbox :1 || {
-    echo "Error: Failed to start TurboVNC server"
+/opt/TurboVNC/bin/vncserver -rfbauth /root/.vnc/passwd -geometry 1200x800 -rfbport "${VNC_PORT}" -wm openbox :1 || {
+    echo "Error: Failed to start TurboVNC server on port ${VNC_PORT}"
     exit 1
 }
 
+# Set Websockify port from environment variable or default to 6080
+WEBSOCKIFY_PORT=${WEBSOCKIFY_PORT:-6080}
+
 # Start websockify to bridge VNC to WebSocket for noVNC access
 # Run in background to allow script to continue
-/opt/venv/bin/websockify --web=/noVNC 6080 localhost:5900 &
+/opt/venv/bin/websockify --web=/noVNC "${WEBSOCKIFY_PORT}" localhost:"${VNC_PORT}" &
 
 # Set DISPLAY environment variable for X11 applications
 export DISPLAY=:1
