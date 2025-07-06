@@ -15,7 +15,7 @@ RUN apt-get update -y && \
     rm -rf /var/lib/apt/lists/*
 
 # Download and install the .deb package in one layer
-RUN wget -q -O /tmp/uprockmining.deb https://edge.uprock.com/v1/app-download/UpRock-Mining-v0.0.10.deb && \
+RUN wget -q -O /tmp/uprockmining.deb https://edge.uprock.com/v1/app-download/UpRock-Mining-v0.0.11.deb && \
     dpkg -i /tmp/uprockmining.deb && \
     apt-get update -y && \
     apt-get install -y --fix-broken --no-install-recommends --no-install-suggests && \
